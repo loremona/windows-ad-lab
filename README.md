@@ -71,3 +71,24 @@ cd C:\Script
 - **Gruppi:** aggiungere ogni utente al gruppo del suo reparto con `Add-ADGroupMember`.
 - **Seconda VM:** unire un server membro al dominio, per vedere le GPO applicate a un
   login vero e non solo simulate.
+
+## Cosa è andato storto (e cosa ho imparato)
+
+Non è filato tutto liscio, anzi. Mi segno qui gli errori che ho fatto, perché sono quelli
+che mi ricordo meglio.
+
+- Per creare il file CSV ho usato `mkdir C:\Script\utenti.csv`. Mi ha creato una cartella
+  chiamata `utenti.csv`. L'ho capito solo guardando la `d` nella colonna Mode. `mkdir` fa
+  solo cartelle, il file l'ho poi creato con notepad.
+- Ho lanciato `New-ADUser` per sbaglio senza parametri. Mi ha chiesto il
+  nome, ho scritto "lorenzo" e me l'ha creato davvero, disabilitato e nel container
+  `Users`. Così ho capito che senza `-Path` gli utenti finiscono lì. L'ho tolto con
+  `Remove-ADUser`.
+- Nello script avevo scritto `foreach ($u in Utenti)` senza il `$`. PowerShell cercava un
+  comando chiamato Utenti. L'errore diceva riga 3 carattere 16 con le onde sotto la parola
+  sbagliata, da lì l'ho trovato.
+- Ho creato l'OU Computer dentro Utenti per sbaglio. Per spostarla ho dovuto prima
+  togliere la protezione dalla cancellazione accidentale, che si trova in Properties →
+  Object solo con View → Advanced Features attivo.
+- Prima ancora di Windows: su CachyOS `virsh net-edit` mi apriva nvim anche con
+  `EDITOR=nano`. Il motivo è che virsh guarda prima `VISUAL`, che nel mio sistema era nvim.
